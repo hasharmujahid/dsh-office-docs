@@ -27,3 +27,7 @@ Thumbs.db
 # Local skill installs
 .dsh/
 .agents/
+
+# Local GitHub CLI state (contains an OAuth token — never commit)
+.gh-config/
+.ghbin/
