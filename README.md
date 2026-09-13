@@ -1,6 +1,6 @@
 # office-docs
 
-[![test](https://github.com/OWNER/REPO/actions/workflows/test.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/test.yml)
+[![test](https://github.com/hasharmujahid/dsh-office-docs/actions/workflows/test.yml/badge.svg)](https://github.com/hasharmujahid/dsh-office-docs/actions/workflows/test.yml)
 
 A DSH skill that makes Word, Excel, and PowerPoint deliverables reliable: build them, edit them under
 tracked changes, validate them, and *look* at the result before handing it over.
