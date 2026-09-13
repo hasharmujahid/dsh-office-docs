@@ -1,0 +1,62 @@
+name: test
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    # The full path, not a reduced one: conversion and rendering are the parts
+    # most likely to break, so the runner installs LibreOffice and poppler
+    # rather than skipping those checks.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install LibreOffice and poppler
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends \
+            libreoffice-writer libreoffice-calc libreoffice-impress poppler-utils
+
+      - name: Build the shared environment
+        run: python3 scripts/bootstrap.py
+
+      - name: Verify the toolchain end to end
+        run: ~/.dsh/office-docs/venv/bin/python scripts/smoke_test.py
+
+      - name: Verify every documented example still runs
+        run: ~/.dsh/office-docs/venv/bin/python scripts/verify_reference_code.py
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Byte-compile every script
+        run: python3 -m compileall -q scripts/
+      - name: Check that the skill's frontmatter is well formed
+        run: |
+          python3 - <<'PY'
+          import sys, pathlib
+          text = pathlib.Path("SKILL.md").read_text(encoding="utf-8")
+          if not text.startswith("---"):
+              sys.exit("SKILL.md must start with YAML frontmatter")
+          front = text.split("---", 2)[1]
+          for field in ("name:", "description:"):
+              if field not in front:
+                  sys.exit(f"SKILL.md frontmatter is missing {field}")
+          print("SKILL.md frontmatter OK")
+          PY
