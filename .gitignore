@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# The shared environment is created by scripts/bootstrap.py, never committed
+.office-docs/
+
+# Rendered output and scratch artifacts from the scripts
+page-*.png
+page-*.jpg
+*.pdf
+!reference/*.pdf
+*.tmp
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Local skill installs
+.dsh/
+.agents/
